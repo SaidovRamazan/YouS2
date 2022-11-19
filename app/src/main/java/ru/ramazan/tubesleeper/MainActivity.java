@@ -5,15 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.util.Log;
-import android.webkit.JavascriptInterface;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
-import java.io.IOException;
 import java.util.Objects;
 
 
@@ -31,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
         String type = intent.getType();
 
         String youtubeUrl = "";
-        String videoLink = "";
 
         if (Intent.ACTION_SEND.equals(action) && type != null)
             if ("text/plain".equals(type))
@@ -39,20 +32,18 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
+        VideoLink.mainActivity = this;
 
         WebView webView  = findViewById(R.id.webView);
         WebSettings webSetting = webView.getSettings();
         webSetting.setJavaScriptEnabled(true);
-        //WebChromeClient webChromeClient = new WebChromeClient();
 
         if (!Objects.equals(youtubeUrl, ""))
-            videoLink = new VideoLinkProvider().getVideoLink(youtubeUrl, webView);
+            new VideoLinkProvider(webView).setVideoLink(youtubeUrl);
 
-        if (!Objects.equals(videoLink, ""))
-            // webView.loadUrl(videoLink) // videoLink Содержит ссылку на видео. То есть, если её открыть, то уже откроется чистое видео.
-            webView.loadUrl("https://vk.com"); // Однако пока не получается попросить WebView открыть эту ссылку. Надо понять, как попрость webView открыть нашу ссылку.
+        //if (!Objects.equals(VideoLink.videoLink, ""))
+        //     webView.loadUrl(VideoLink.videoLink); // videoLink Содержит ссылку на видео. То есть, если её открыть, то уже откроется чистое видео.
+        //    webView.loadUrl("https://vk.com"); // Однако пока не получается попросить WebView открыть эту ссылку. Надо понять, как попрость webView открыть нашу ссылку.
         // Тут я ради эксперимента попробовал открыть вконтакте. Но как видел, не работает. Разберись короче, как перейти на другую ссылку через один экземпрял WebView.
         // Там в группах поспрашивай и в гугле поиши.
         // Всё давай, завтра утром жду рабочий вариант.

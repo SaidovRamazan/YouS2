@@ -1,17 +1,28 @@
 package ru.ramazan.tubesleeper;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 
 public class VideoLinkProvider {
-    String saveFromUrl = "http://ru.savefrom.net/#url=";
-    static String videoLink = "";
 
-    public String getVideoLink(String youtubeUrl, WebView webView) {
+    VideoLinkProvider(){}
+
+    VideoLinkProvider(WebView webView) {
+        this.webView = webView;
+    }
+
+    WebView webView;
+
+    String saveFromUrl = "http://ru.savefrom.net/#url=";
+
+    public void setVideoLink(String youtubeUrl) {
 
         webView.loadUrl(saveFromUrl + youtubeUrl);
 
@@ -19,23 +30,26 @@ public class VideoLinkProvider {
             @Override
             public void onPageFinished(WebView webView, String url) {
                 super.onPageFinished(webView, url);
-                injectJavaScript(webView);
+                injectJavaScript();
             }
         });
         webView.addJavascriptInterface(new JSBridge(), "Bridge");
 
-        return videoLink;
     }
 
-    public void injectJavaScript(WebView webView) {
-        webView.loadUrl("javascript:(function(){setTimeout(() => { let url = document.querySelector('.download-icon').href; Bridge.calledFromJS(url) }, 15000) })()");
+    public void injectJavaScript() {
+        webView.loadUrl("javascript:(function(){setTimeout(() => { let url = document.querySelector('.download-icon').href; Bridge.calledFromJS(url) }, 10000) })()");
     }
 
     static class JSBridge {
+        @SuppressLint("SetJavaScriptEnabled")
         @JavascriptInterface
         public void calledFromJS(String url) {
             Log.d("АДРЕС С САЙТА: ", url);
-            videoLink = url;
+            VideoLink.videoLink = url;
+
+            Intent myIntent = new Intent(VideoLink.mainActivity, VideoActivity.class);
+            VideoLink.mainActivity.startActivity(myIntent);
         }
     }
 

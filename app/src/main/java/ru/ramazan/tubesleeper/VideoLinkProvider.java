@@ -1,17 +1,20 @@
 package ru.ramazan.tubesleeper;
 
-import android.annotation.SuppressLint;
-import android.util.Log;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 
 public class VideoLinkProvider {
-    String saveFromUrl = "http://ru.savefrom.net/#url=";
-    static String videoLink = "";
 
-    public String getVideoLink(String youtubeUrl, WebView webView) {
+    VideoLinkProvider(WebView webView) {
+        this.webView = webView;
+    }
+
+    WebView webView;
+
+    String saveFromUrl = "http://ru.savefrom.net/#url=";
+
+    public void setVideoLink(String youtubeUrl) {
 
         webView.loadUrl(saveFromUrl + youtubeUrl);
 
@@ -19,24 +22,15 @@ public class VideoLinkProvider {
             @Override
             public void onPageFinished(WebView webView, String url) {
                 super.onPageFinished(webView, url);
-                injectJavaScript(webView);
+                injectJavaScript();
             }
         });
-        webView.addJavascriptInterface(new JSBridge(), "Bridge");
+        webView.addJavascriptInterface(new VideoOpener(), "VideoOpener");
 
-        return videoLink;
     }
 
-    public void injectJavaScript(WebView webView) {
-        webView.loadUrl("javascript:(function(){setTimeout(() => { let url = document.querySelector('.download-icon').href; Bridge.calledFromJS(url) }, 15000) })()");
-    }
-
-    static class JSBridge {
-        @JavascriptInterface
-        public void calledFromJS(String url) {
-            Log.d("АДРЕС С САЙТА: ", url);
-            videoLink = url;
-        }
+    public void injectJavaScript() {
+        webView.loadUrl("javascript:(function(){setTimeout(() => { let url = document.querySelector('.download-icon').href; VideoOpener.calledFromJS(url) }, 10000) })()");
     }
 
 }

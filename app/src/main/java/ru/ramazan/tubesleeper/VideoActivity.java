@@ -3,12 +3,27 @@ package ru.ramazan.tubesleeper;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.PixelFormat;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.MediaController;
+import android.widget.VideoView;
+
+import java.util.zip.Inflater;
 
 public class VideoActivity extends AppCompatActivity {
+    VideoActivity(){
+        LayoutInflater mInflater;
+
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -16,17 +31,11 @@ public class VideoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_activity);
 
-        WebView webView = findViewById(R.id.videoWebView);
-        WebSettings webSetting = webView.getSettings();
-        webSetting.setJavaScriptEnabled(true);
+        VideoView videoView = findViewById(R.id.videoView);
+        videoView.setVideoURI(Uri.parse(VideoLink.videoLink));
 
-        webView.loadUrl(VideoLink.videoLink);
-        webView.setWebViewClient(new WebViewClient(){
-            @Override
-            public void onPageFinished(WebView webView, String url) {
-                super.onPageFinished(webView, url);
-            }
-        });
-
+        MediaController mediaController = new MediaController(this);
+        videoView.setMediaController(mediaController);
+        mediaController.setAnchorView(videoView);
     }
 }

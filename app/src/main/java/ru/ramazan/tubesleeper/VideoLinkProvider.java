@@ -30,7 +30,7 @@ public class VideoLinkProvider {
     }
 
     public void injectJavaScript() {
-        webView.loadUrl("javascript:(function(){setTimeout(() => { let url = document.querySelector('.download-icon').href; VideoOpener.calledFromJS(url) }, 10000) })()");
+        webView.loadUrl("javascript:(function(){setTimeout(() => { let url = document.querySelector('.download-icon').href; VideoOpener.calledFromJS(url) }, 5000) })()");
     }
 
 }

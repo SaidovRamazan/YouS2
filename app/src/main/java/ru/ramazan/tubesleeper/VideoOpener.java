@@ -13,7 +13,7 @@ public class VideoOpener {
         VideoLink.videoLink = url;
 
         /* Теперь, когда ссылка получена, перейдём в VideoActivity */
-        Intent myIntent = new Intent(VideoLink.mainActivity, VideoActivity.class);
+        Intent myIntent = new Intent(VideoLink.mainActivity, PlayerActivity.class);
         VideoLink.mainActivity.startActivity(myIntent);
     }
 }
